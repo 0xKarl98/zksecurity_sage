@@ -123,8 +123,8 @@ class SumcheckVerifier:
         return self.claimed_sum == self.f(*self.r_values)
 
 
-def run_sumcheck(prover):
-    claim = prover.total_sum()
+def run_sumcheck(prover, claimed_sum=None):
+    claim = prover.total_sum() if claimed_sum is None else claimed_sum
     verifier = SumcheckVerifier(claim, prover.f, prover.vars)
     print(f"\nProver claims total sum C = {claim}")
     for i in range(len(prover.vars)):
@@ -144,5 +144,7 @@ def run_sumcheck(prover):
 
 if __name__ == "__main__":
     prover = Prover(f, (x1, x2, x3))
-    # run with modular verifier flavor
+    # run with modular verifier flavor (correct claim)
     run_sumcheck(prover)
+    # run again with an intentionally wrong claim to see rejection
+    run_sumcheck(prover, claimed_sum=prover.total_sum() + 1)
